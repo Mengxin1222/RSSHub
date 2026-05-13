@@ -1,38 +1,40 @@
-# RSSHub 用例图
+# RSSHub 用例图 (Use Case Diagram)
 
 ## 1. 总体用例图
 
 ```mermaid
-useCaseDiagram
-    actor "普通用户" as User
-    actor "管理员" as Admin
-    actor "开发者" as Developer
-    
-    package "RSSHub 系统" {
-        usecase "浏览 RSS 源" as UC1
-        usecase "生成 RSS 订阅" as UC2
-        usecase "过滤 RSS 内容" as UC3
-        usecase "使用参数自定义" as UC4
-        usecase "配置系统参数" as UC5
-        usecase "管理缓存策略" as UC6
-        usecase "配置代理设置" as UC7
-        usecase "监控系统状态" as UC8
-        usecase "开发新路由" as UC9
-        usecase "维护现有路由" as UC10
-        usecase "提交 Pull Request" as UC11
-        usecase "运行测试" as UC12
-    }
-    
+graph TB
+    subgraph Actors
+        User([普通用户])
+        Admin([管理员])
+        Developer([开发者])
+    end
+
+    subgraph RSSHub系统
+        UC1((浏览RSS源))
+        UC2((生成RSS订阅))
+        UC3((过滤RSS内容))
+        UC4((使用参数自定义))
+        UC5((配置系统参数))
+        UC6((管理缓存策略))
+        UC7((配置代理设置))
+        UC8((监控系统状态))
+        UC9((开发新路由))
+        UC10((维护现有路由))
+        UC11((提交Pull Request))
+        UC12((运行测试))
+    end
+
     User --> UC1
     User --> UC2
     User --> UC3
     User --> UC4
-    
+
     Admin --> UC5
     Admin --> UC6
     Admin --> UC7
     Admin --> UC8
-    
+
     Developer --> UC9
     Developer --> UC10
     Developer --> UC11
@@ -42,7 +44,9 @@ useCaseDiagram
 ### 图表解释
 
 #### 1. 整体概述
-这张图展示了 RSSHub 系统的整体用例关系，定义了三种主要用户角色：普通用户、管理员和开发者，以及它们与系统功能的交互。RSSHub 是一个开源的 RSS 生成器，致力于让一切皆可 RSS，解决了许多网站不提供 RSS 订阅的问题。
+- 这张图讲的是：RSSHub 系统的整体用例关系，定义了三种主要用户角色及其与系统功能的交互
+- 解决什么问题：清晰展示不同角色的职责边界和系统提供的核心功能
+- 核心看点：角色分离设计，普通用户关注内容获取，管理员关注系统运维，开发者关注功能扩展
 
 #### 2. 关键元素说明
 - **普通用户**：使用 RSSHub 获取各种网站内容的 RSS 订阅的终端用户
@@ -62,26 +66,29 @@ useCaseDiagram
 RSSHub 基于 Node.js 和 Hono 框架构建，使用了丰富的依赖库来处理各种网站的抓取需求。系统采用路由注册机制，每个网站对应一个或多个路由，通过统一的中间件处理缓存、错误、访问控制等横切关注点。
 
 #### 5. 设计意图
-通过明确的角色划分，RSSHub 设计了清晰的职责边界：普通用户关注内容获取，管理员关注系统稳定性，开发者关注功能扩展。这种分离使系统既能服务广大用户，又能保持开源项目的活跃贡献生态。
+- 为什么要这样设计：通过明确的角色划分，建立清晰的职责边界
+- 解决了什么痛点：避免功能混乱，让不同角色专注于自己的核心需求
+- 带来了什么好处：系统既能服务广大用户，又能保持开源项目的活跃贡献生态
+- 如果不这样会怎样：职责不清，维护困难，用户体验混乱
 
 ---
 
 ## 2. 普通用户用例图
 
 ```mermaid
-useCaseDiagram
-    actor "普通用户" as User
-    
-    package "RSSHub 用户功能" {
-        usecase "发现可用路由" as UC1
-        usecase "访问 RSS 源" as UC2
-        usecase "使用 URL 参数" as UC3
-        usecase "过滤内容" as UC4
-        usecase "设置热链模板" as UC5
-        usecase "调试输出" as UC6
-        usecase "订阅到阅读器" as UC7
-    }
-    
+graph TB
+    User([普通用户])
+
+    subgraph RSSHub用户功能
+        UC1((发现可用路由))
+        UC2((访问RSS源))
+        UC3((使用URL参数))
+        UC4((过滤内容))
+        UC5((设置热链模板))
+        UC6((调试输出))
+        UC7((订阅到阅读器))
+    end
+
     User --> UC1
     User --> UC2
     User --> UC3
@@ -89,18 +96,20 @@ useCaseDiagram
     User --> UC5
     User --> UC6
     User --> UC7
-    
-    UC3 ..> UC2 : <<include>>
-    UC4 ..> UC2 : <<include>>
-    UC5 ..> UC2 : <<include>>
-    UC6 ..> UC2 : <<include>>
-    UC7 ..> UC2 : <<extend>>
+
+    UC3 -.->|include| UC2
+    UC4 -.->|include| UC2
+    UC5 -.->|include| UC2
+    UC6 -.->|include| UC2
+    UC7 -.->|extend| UC2
 ```
 
 ### 图表解释
 
 #### 1. 整体概述
-这张图详细展示了普通用户与 RSSHub 交互的具体用例，涵盖了从发现路由到最终订阅到 RSS 阅读器的完整用户旅程。普通用户是 RSSHub 最主要的使用者群体，他们通过简单的 URL 访问即可获取各类网站的 RSS 订阅。
+- 这张图讲的是：普通用户与 RSSHub 交互的具体用例，从发现路由到最终订阅的完整用户旅程
+- 解决什么问题：展示用户如何使用 RSSHub 的各项功能
+- 核心看点：URL 参数驱动的自定义能力
 
 #### 2. 关键元素说明
 - **发现可用路由**：用户通过 RSSHub 文档或雷达浏览器扩展发现支持的网站
@@ -112,7 +121,7 @@ useCaseDiagram
 - **订阅到阅读器**：将 RSS 源添加到 RSS 阅读器（如 Folo、Inoreader 等）
 
 #### 3. 关键流程说明
-用户首先通过各种渠道发现 RSSHub 支持的路由，然后构造相应的 URL 访问 RSS 源。在访问过程中，用户可以添加各种 URL 参数来自定义输出。最后，用户可以将这个 RSS 源订阅到自己喜爱的 RSS 阅读器中，实现内容的自动更新推送。
+用户首先通过各种渠道发现 RSSHub 支持的路由，然后构造相应的 URL 访问 RSS 源。在访问过程中，用户可以添加各种 URL 参数来自定义输出。最后，用户可以将这个 RSS 源订阅到自己喜爱的 RSS 阅读器中。
 
 #### 4. 关键技术解释
 RSSHub 提供了丰富的 URL 参数支持：
@@ -122,32 +131,33 @@ RSSHub 提供了丰富的 URL 参数支持：
 - `debug`：启用调试模式查看原始数据
 - `hotlink`：自定义图片反代模板
 
-这些参数通过 Hono 框架的请求上下文传递给各个路由处理器。
-
 #### 5. 设计意图
-RSSHub 采用"配置即代码"的理念，将所有自定义选项都暴露为 URL 参数，这样用户无需部署自己的实例就能享受到个性化的 RSS 服务。这种设计大大降低了使用门槛，让普通用户也能轻松使用 RSSHub 的高级功能。
+- 为什么要这样设计：将所有自定义选项暴露为 URL 参数，降低使用门槛
+- 解决了什么痛点：用户无需部署自己的实例就能享受个性化服务
+- 带来了什么好处：普通用户也能轻松使用高级功能
+- 如果不这样会怎样：用户需要自己部署实例，使用门槛高
 
 ---
 
 ## 3. 管理员用例图
 
 ```mermaid
-useCaseDiagram
-    actor "管理员" as Admin
-    
-    package "RSSHub 管理功能" {
-        usecase "部署 RSSHub 实例" as UC1
-        usecase "配置环境变量" as UC2
-        usecase "配置缓存系统" as UC3
-        usecase "设置代理服务" as UC4
-        usecase "配置访问控制" as UC5
-        usecase "启用错误追踪" as UC6
-        usecase "监控系统指标" as UC7
-        usecase "配置路由 Cookie" as UC8
-        usecase "管理 NSFW 内容" as UC9
-        usecase "配置 OpenAI 集成" as UC10
-    }
-    
+graph TB
+    Admin([管理员])
+
+    subgraph RSSHub管理功能
+        UC1((部署RSSHub实例))
+        UC2((配置环境变量))
+        UC3((配置缓存系统))
+        UC4((设置代理服务))
+        UC5((配置访问控制))
+        UC6((启用错误追踪))
+        UC7((监控系统指标))
+        UC8((配置路由Cookie))
+        UC9((管理NSFW内容))
+        UC10((配置OpenAI集成))
+    end
+
     Admin --> UC1
     Admin --> UC2
     Admin --> UC3
@@ -158,20 +168,22 @@ useCaseDiagram
     Admin --> UC8
     Admin --> UC9
     Admin --> UC10
-    
-    UC2 ..> UC1 : <<include>>
-    UC3 ..> UC1 : <<include>>
-    UC4 ..> UC1 : <<include>>
-    UC5 ..> UC1 : <<include>>
-    UC8 ..> UC2 : <<include>>
-    UC9 ..> UC2 : <<include>>
-    UC10 ..> UC2 : <<include>>
+
+    UC2 -.->|include| UC1
+    UC3 -.->|include| UC1
+    UC4 -.->|include| UC1
+    UC5 -.->|include| UC1
+    UC8 -.->|include| UC2
+    UC9 -.->|include| UC2
+    UC10 -.->|include| UC2
 ```
 
 ### 图表解释
 
 #### 1. 整体概述
-这张图展示了管理员在部署和维护 RSSHub 实例时的各项操作。管理员负责确保 RSSHub 实例的稳定运行、性能优化和安全配置，是私有化部署场景下的关键角色。
+- 这张图讲的是：管理员在部署和维护 RSSHub 实例时的各项操作
+- 解决什么问题：展示管理员如何确保系统稳定运行
+- 核心看点：环境变量驱动的配置体系
 
 #### 2. 关键元素说明
 - **部署 RSSHub 实例**：通过 Docker、Vercel、Fly.io 等方式部署 RSSHub
@@ -186,41 +198,43 @@ useCaseDiagram
 - **配置 OpenAI 集成**：启用 AI 摘要和翻译功能
 
 #### 3. 关键流程说明
-管理员首先选择合适的部署方式部署 RSSHub 实例，然后根据需要配置各种环境变量。核心配置包括缓存策略（减少对源站的请求压力）、代理设置（解决地区限制问题）、以及特定路由的认证信息。部署完成后，管理员通过监控端点持续观察系统运行状态。
+管理员首先选择合适的部署方式部署 RSSHub 实例，然后根据需要配置各种环境变量。核心配置包括缓存策略、代理设置、以及特定路由的认证信息。部署完成后，管理员通过监控端点持续观察系统运行状态。
 
 #### 4. 关键技术解释
 RSSHub 的配置系统完全基于环境变量，支持：
 - **缓存类型**：memory（内存 LRU 缓存）、redis、http 或禁用
 - **代理策略**：all（所有请求）或 on_retry（仅失败重试时）
 - **多代理支持**：通过 PROXY_URIS 配置多个代理自动故障转移
-- **远程配置**：支持从远程 URL 加载配置，支持 BASIC 认证
-- **动态 Cookie**：支持为 Bilibili 等站点配置多组 Cookie 轮询使用
+- **远程配置**：支持从远程 URL 加载配置
 
 #### 5. 设计意图
-RSSHub 的管理员功能设计遵循"约定优于配置"原则，提供了合理的默认值，让简单部署变得容易。同时，通过丰富的环境变量选项，满足了高级用户的定制需求。这种设计使 RSSHub 既能作为公共服务运行，也能作为私有实例安全部署。
+- 为什么要这样设计：遵循"约定优于配置"原则，提供合理默认值
+- 解决了什么痛点：简单部署容易，高级定制也支持
+- 带来了什么好处：既能作为公共服务运行，也能作为私有实例安全部署
+- 如果不这样会怎样：配置复杂，部署门槛高
 
 ---
 
 ## 4. 开发者用例图
 
 ```mermaid
-useCaseDiagram
-    actor "开发者" as Developer
-    
-    package "RSSHub 开发功能" {
-        usecase "Fork 项目仓库" as UC1
-        usecase "搭建开发环境" as UC2
-        usecase "阅读贡献指南" as UC3
-        usecase "开发新路由" as UC4
-        usecase "编写路由文档" as UC5
-        usecase "维护现有路由" as UC6
-        usecase "运行测试套件" as UC7
-        usecase "提交 Pull Request" as UC8
-        usecase "代码审查与修改" as UC9
-        usecase "发布新版本" as UC10
-        usecase "调试 Puppeteer" as UC11
-    }
-    
+graph TB
+    Developer([开发者])
+
+    subgraph RSSHub开发功能
+        UC1((Fork项目仓库))
+        UC2((搭建开发环境))
+        UC3((阅读贡献指南))
+        UC4((开发新路由))
+        UC5((编写路由文档))
+        UC6((维护现有路由))
+        UC7((运行测试套件))
+        UC8((提交Pull Request))
+        UC9((代码审查与修改))
+        UC10((发布新版本))
+        UC11((调试Puppeteer))
+    end
+
     Developer --> UC1
     Developer --> UC2
     Developer --> UC3
@@ -232,20 +246,22 @@ useCaseDiagram
     Developer --> UC9
     Developer --> UC10
     Developer --> UC11
-    
-    UC4 ..> UC3 : <<include>>
-    UC5 ..> UC4 : <<include>>
-    UC7 ..> UC4 : <<include>>
-    UC7 ..> UC6 : <<include>>
-    UC9 ..> UC8 : <<extend>>
-    UC11 ..> UC4 : <<extend>>
-    UC11 ..> UC6 : <<extend>>
+
+    UC4 -.->|include| UC3
+    UC5 -.->|include| UC4
+    UC7 -.->|include| UC4
+    UC7 -.->|include| UC6
+    UC9 -.->|extend| UC8
+    UC11 -.->|extend| UC4
+    UC11 -.->|extend| UC6
 ```
 
 ### 图表解释
 
 #### 1. 整体概述
-这张图展示了开发者参与 RSSHub 开源项目的完整工作流程。RSSHub 拥有活跃的开源社区，每周都有新的路由被贡献，开发者是保持 RSSHub 生命力的核心力量。
+- 这张图讲的是：开发者参与 RSSHub 开源项目的完整工作流程
+- 解决什么问题：展示如何为 RSSHub 贡献代码
+- 核心看点：标准化的开源贡献流程
 
 #### 2. 关键元素说明
 - **Fork 项目仓库**：在 GitHub 上 Fork DIYgod/RSSHub 仓库
@@ -261,7 +277,7 @@ useCaseDiagram
 - **调试 Puppeteer**：使用 Puppeteer 调试复杂的动态页面
 
 #### 3. 关键流程说明
-开发者首先 Fork 项目并搭建本地开发环境，然后选择一个网站开发新路由或修复现有问题。开发完成后，编写相应的文档，运行测试确保没有问题，最后提交 Pull Request。项目维护者会进行代码审查，可能要求一些修改，通过后代码会合入主分支。
+开发者首先 Fork 项目并搭建本地开发环境，然后选择一个网站开发新路由或修复现有问题。开发完成后，编写相应的文档，运行测试确保没有问题，最后提交 Pull Request。项目维护者会进行代码审查，通过后代码会合入主分支。
 
 #### 4. 关键技术解释
 RSSHub 的路由开发体系：
@@ -270,62 +286,66 @@ RSSHub 的路由开发体系：
 - **工具函数**：提供了 `ofetch`、`cheerio`、`got` 等丰富的工具
 - **Puppeteer 支持**：内置对动态渲染页面的支持
 - **测试框架**：使用 vitest 进行单元测试和路由测试
-- **构建系统**：自动构建路由注册表和文档
 
 #### 5. 设计意图
-RSSHub 的开发者体验设计注重降低贡献门槛，通过清晰的目录结构、完善的工具函数、详细的贡献指南，让即使是新手也能轻松贡献新路由。同时，通过自动化测试和严格的代码审查，保证了代码质量和项目的长期可维护性。
+- 为什么要这样设计：降低贡献门槛，让新手也能轻松贡献
+- 解决了什么痛点：清晰的目录结构和完善的工具函数
+- 带来了什么好处：活跃的社区贡献，持续增长的路由数量
+- 如果不这样会怎样：贡献门槛高，社区活跃度低
 
 ---
 
 ## 5. 路由生态系统用例图
 
 ```mermaid
-useCaseDiagram
-    actor "用户" as User
-    actor "路由维护者" as Maintainer
-    actor "RSSHub Radar" as Radar
-    actor "第三方阅读器" as Reader
-    
-    package "RSSHub 生态系统" {
-        usecase "发现新路由" as UC1
-        usecase "订阅 RSS 源" as UC2
-        usecase "自动更新路由" as UC3
-        usecase "检测网站 RSS" as UC4
-        usecase "一键订阅" as UC5
-        usecase "提交路由失效" as UC6
-        usecase "修复失效路由" as UC7
-        usecase "添加新网站支持" as UC8
-        usecase "使用 AI 摘要" as UC9
-        usecase "跨平台使用" as UC10
-    }
-    
+graph TB
+    User([用户])
+    Maintainer([路由维护者])
+    Radar([RSSHub Radar])
+    Reader([第三方阅读器])
+
+    subgraph RSSHub生态系统
+        UC1((发现新路由))
+        UC2((订阅RSS源))
+        UC3((自动更新路由))
+        UC4((检测网站RSS))
+        UC5((一键订阅))
+        UC6((提交路由失效))
+        UC7((修复失效路由))
+        UC8((添加新网站支持))
+        UC9((使用AI摘要))
+        UC10((跨平台使用))
+    end
+
     User --> UC1
     User --> UC2
     User --> UC6
     User --> UC9
     User --> UC10
-    
+
     Maintainer --> UC7
     Maintainer --> UC8
-    
+
     Radar --> UC4
     Radar --> UC5
     Radar --> UC1
-    
+
     Reader --> UC2
     Reader --> UC3
     Reader --> UC10
-    
-    UC5 ..> UC2 : <<include>>
-    UC7 ..> UC6 : <<extend>>
-    UC4 ..> UC1 : <<include>>
-    UC9 ..> UC2 : <<extend>>
+
+    UC5 -.->|include| UC2
+    UC7 -.->|extend| UC6
+    UC4 -.->|include| UC1
+    UC9 -.->|extend| UC2
 ```
 
 ### 图表解释
 
 #### 1. 整体概述
-这张图展示了 RSSHub 完整的生态系统，包括核心服务、浏览器扩展、第三方阅读器以及社区维护者之间的协作关系。RSSHub 不仅仅是一个项目，而是一个完整的 RSS 生态。
+- 这张图讲的是：RSSHub 完整的生态系统，包括核心服务、浏览器扩展、第三方阅读器以及社区维护者之间的协作关系
+- 解决什么问题：展示 RSSHub 如何构建可持续发展的 RSS 生态
+- 核心看点：多角色协作的生态系统设计
 
 #### 2. 关键元素说明
 - **RSSHub Radar**：官方浏览器扩展，自动检测当前网站是否有对应的 RSSHub 路由
@@ -350,7 +370,10 @@ RSSHub 生态系统的关键技术：
 - **多端适配**：支持部署到 Docker、Vercel、Fly.io、Cloudflare Workers 等多种平台
 
 #### 5. 设计意图
-RSSHub 生态系统的设计目标是让 RSS 重新变得简单易用。通过 Radar 等工具降低了发现和使用 RSSHub 的门槛，通过活跃的社区维护确保了路由的时效性，通过开放的架构鼓励第三方集成，最终构建了一个可持续发展的 RSS 生态。
+- 为什么要这样设计：让 RSS 重新变得简单易用
+- 解决了什么痛点：通过 Radar 等工具降低发现和使用 RSSHub 的门槛
+- 带来了什么好处：活跃的社区维护确保路由时效性，开放架构鼓励第三方集成
+- 如果不这样会怎样：用户发现和使用 RSS 困难，生态不活跃
 
 ---
 *生成时间: 2026-05-13*
